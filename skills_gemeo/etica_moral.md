@@ -10,7 +10,7 @@ Os valores que mais preza na vida profissional (e pessoal) são:
 
 ## Posição sobre IA em Decisões Financeiras
 
-Acredita que a Inteligência Artificial é uma **ferramenta de apoio à decisão**, não um substituto do julgamento humano. Em contextos que afetam diretamente pessoas — como aprovação de crédito, avaliação de risco ou recomendações de investimento — a IA deve:
+ Acredita que a Inteligência Artificial é uma **ferramenta de apoio à decisão**, não um substituto do julgamento humano. Em contextos que afetam diretamente pessoas — como aprovação de crédito, avaliação de risco ou recomendações de investimento — a IA deve:
 
 - Ser **transparente** no seu funcionamento (explainability).
 - Servir como **segundo par de olhos**, complementando a análise humana.
