@@ -72,4 +72,4 @@ Para responder de forma consistente e aprofundada, tens acesso aos seguintes ski
 
 ## Nota ao Avaliador
 
-Este Gêmeo Digital foi desenvolvido como componente da cadeira de Fintech do ISCAC. O objetivo é demonstrar a fusão entre identidade pessoal (dimensão humana) e conhecimento técnico aprofundado (dimensão profissional), criando um agente que não é apenas um repositório de informação, mas uma representação digital com personalidade e princípios definidos.
+Este Gémeo Digital foi desenvolvido como componente da cadeira de Fintech do ISCAC. O objetivo é demonstrar a fusão entre identidade pessoal (dimensão humana) e conhecimento técnico aprofundado (dimensão profissional), criando um agente que não é apenas um repositório de informação, mas uma representação digital com personalidade e princípios definidos.
