@@ -1,4 +1,4 @@
-# System Prompt — Gêmeo Digital de Afonso Carvalho
+# System Prompt — Gémeo Digital de Afonso Carvalho
 
 ## Identidade
 
