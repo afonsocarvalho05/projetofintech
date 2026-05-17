@@ -1,299 +1,1130 @@
 <!DOCTYPE html>
 <html lang="pt">
+
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>Gemeo Digital — Afonso Carvalho</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
-<style>
-:root{--bg:#0a0f1e;--surface:#111827;--card:#1a2236;--border:#1e3a5f;--accent:#3b82f6;--accent2:#06b6d4;--gold:#f59e0b;--purple:#8b5cf6;--text:#e2e8f0;--muted:#64748b;--success:#10b981;}
-*{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);height:100vh;display:flex;flex-direction:column;overflow:hidden;}
-/* TABS NAV */
-.tab-nav{display:flex;gap:0;background:rgba(17,24,39,0.98);border-bottom:1px solid var(--border);flex-shrink:0;}
-.tab-btn{flex:1;padding:14px;font-size:13px;font-weight:500;color:var(--muted);background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;transition:all .2s;letter-spacing:.3px;}
-.tab-btn.active{color:var(--accent);border-bottom-color:var(--accent);}
-.tab-btn.eval.active{color:var(--gold);border-bottom-color:var(--gold);}
-.tab-btn:hover{color:var(--text);}
-/* HEADER */
-header{display:flex;align-items:center;gap:16px;padding:12px 24px;background:rgba(17,24,39,0.95);border-bottom:1px solid var(--border);backdrop-filter:blur(12px);flex-shrink:0;}
-.avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:#fff;animation:pulse 3s infinite;}
-@keyframes pulse{0%,100%{box-shadow:0 0 20px rgba(59,130,246,.4);}50%{box-shadow:0 0 30px rgba(6,182,212,.6);}}
-.header-info h1{font-size:16px;font-weight:600;}
-.header-info p{font-size:11px;color:var(--accent2);margin-top:2px;}
-.pills{display:flex;gap:6px;margin-left:10px;}
-.pill{font-size:10px;padding:2px 9px;border-radius:999px;border:1px solid var(--border);color:var(--muted);}
-.pill.e{border-color:#10b981;color:#10b981;}.pill.p{border-color:#f59e0b;color:#f59e0b;}.pill.f{border-color:#3b82f6;color:#3b82f6;}
-.sdot{width:8px;height:8px;border-radius:50%;background:var(--success);margin-left:auto;box-shadow:0 0 8px var(--success);animation:blink 2s infinite;}
-@keyframes blink{0%,100%{opacity:1;}50%{opacity:.4;}}
-/* PANELS */
-.panel{display:none;flex:1;overflow:hidden;flex-direction:column;}
-.panel.active{display:flex;}
-/* CHAT TAB */
-#chat-wrap{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:16px;scroll-behavior:smooth;}
-#chat-wrap::-webkit-scrollbar{width:4px;}
-#chat-wrap::-webkit-scrollbar-thumb{background:var(--border);border-radius:99px;}
-.welcome{background:linear-gradient(135deg,rgba(59,130,246,.1),rgba(6,182,212,.08));border:1px solid rgba(59,130,246,.25);border-radius:16px;padding:24px;text-align:center;animation:up .5s ease;}
-.welcome h2{font-size:18px;font-weight:700;margin-bottom:8px;}
-.welcome p{font-size:13px;color:var(--muted);line-height:1.7;}
-.chips{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;margin-top:14px;}
-.chip{font-size:11px;padding:6px 13px;border-radius:999px;background:rgba(255,255,255,.04);border:1px solid var(--border);color:var(--muted);cursor:pointer;transition:all .2s;}
-.chip:hover{border-color:var(--accent);color:var(--accent);background:rgba(59,130,246,.1);}
-.msg{display:flex;gap:10px;animation:up .35s ease;}
-@keyframes up{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
-.msg.user{flex-direction:row-reverse;align-self:flex-end;max-width:75%;}
-.msg.bot{align-self:flex-start;max-width:85%;}
-.msg-av{width:34px;height:34px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;}
-.msg.bot .msg-av{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;}
-.msg.user .msg-av{background:#374151;color:var(--text);}
-.bubble{padding:11px 14px;border-radius:14px;font-size:13px;line-height:1.7;}
-.msg.bot .bubble{background:var(--card);border:1px solid var(--border);border-top-left-radius:4px;}
-.msg.user .bubble{background:#1d4ed8;border-top-right-radius:4px;color:#fff;}
-.bubble strong{color:var(--accent2);}.bubble ul{padding-left:16px;margin:4px 0;}.bubble code{background:rgba(255,255,255,.08);padding:1px 4px;border-radius:3px;font-size:12px;}
-.typing{display:flex;gap:5px;align-items:center;padding:12px 16px;}
-.dot{width:6px;height:6px;border-radius:50%;background:var(--accent);animation:bounce 1.2s infinite;}
-.dot:nth-child(2){animation-delay:.2s;}.dot:nth-child(3){animation-delay:.4s;}
-@keyframes bounce{0%,80%,100%{transform:translateY(0);opacity:.5;}40%{transform:translateY(-7px);opacity:1;}}
-#input-bar{display:flex;gap:8px;padding:14px 20px;background:rgba(17,24,39,.98);border-top:1px solid var(--border);flex-shrink:0;}
-#user-input{flex:1;padding:11px 16px;border-radius:10px;background:var(--card);border:1px solid var(--border);color:var(--text);font-family:'Inter',sans-serif;font-size:13px;outline:none;resize:none;max-height:100px;transition:border .2s;line-height:1.5;}
-#user-input:focus{border-color:var(--accent);}
-#user-input::placeholder{color:var(--muted);}
-#send-btn{width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;color:#fff;cursor:pointer;font-size:18px;transition:opacity .2s,transform .15s;flex-shrink:0;align-self:flex-end;}
-#send-btn:hover{opacity:.9;transform:scale(1.05);}#send-btn:disabled{opacity:.4;cursor:not-allowed;}
-#clear-btn{background:transparent;border:1px solid var(--border);color:var(--muted);padding:7px 12px;border-radius:8px;font-size:11px;cursor:pointer;align-self:flex-end;transition:all .2s;}
-#clear-btn:hover{border-color:#ef4444;color:#ef4444;}
-/* EVALUATOR TAB */
-#eval-wrap{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:16px;}
-#eval-wrap::-webkit-scrollbar{width:4px;}
-#eval-wrap::-webkit-scrollbar-thumb{background:var(--border);border-radius:99px;}
-.eval-header{background:linear-gradient(135deg,rgba(245,158,11,.1),rgba(139,92,246,.08));border:1px solid rgba(245,158,11,.25);border-radius:16px;padding:20px;text-align:center;}
-.eval-header h2{font-size:17px;font-weight:700;color:var(--gold);margin-bottom:6px;}
-.eval-header p{font-size:12px;color:var(--muted);line-height:1.6;}
-.phase-badge{display:inline-block;font-size:10px;padding:3px 10px;border-radius:999px;margin-bottom:10px;}
-.phase1-badge{background:rgba(16,185,129,.15);color:var(--success);border:1px solid rgba(16,185,129,.3);}
-.phase2-badge{background:rgba(245,158,11,.15);color:var(--gold);border:1px solid rgba(245,158,11,.3);}
-.dim-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;transition:border .2s;}
-.dim-card:focus-within{border-color:var(--gold);}
-.dim-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px;}
-.dim-desc{font-size:11px;color:var(--muted);margin-bottom:12px;line-height:1.5;}
-.dim-score-row{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
-.dim-score-row label{font-size:11px;color:var(--muted);white-space:nowrap;}
-.score-input{width:64px;padding:6px 10px;border-radius:8px;background:var(--surface);border:1px solid var(--border);color:var(--gold);font-size:14px;font-weight:600;text-align:center;outline:none;}
-.score-input:focus{border-color:var(--gold);}
-.score-max{font-size:11px;color:var(--muted);}
-.dim-textarea{width:100%;padding:10px 13px;border-radius:10px;background:var(--surface);border:1px solid var(--border);color:var(--text);font-family:'Inter',sans-serif;font-size:12px;resize:vertical;min-height:70px;outline:none;transition:border .2s;line-height:1.5;}
-.dim-textarea:focus{border-color:var(--gold);}
-.dim-textarea::placeholder{color:var(--muted);}
-#submit-eval-btn{width:100%;padding:14px;border-radius:12px;background:linear-gradient(135deg,var(--gold),var(--purple));border:none;color:#fff;font-family:'Inter',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:opacity .2s,transform .15s;letter-spacing:.3px;}
-#submit-eval-btn:hover{opacity:.9;transform:translateY(-1px);}
-#submit-eval-btn:disabled{opacity:.4;cursor:not-allowed;}
-/* SCORECARD */
-#scorecard{display:none;background:var(--card);border:1px solid rgba(245,158,11,.3);border-radius:16px;padding:20px;}
-#scorecard h3{font-size:14px;font-weight:600;color:var(--gold);margin-bottom:14px;text-align:center;}
-.score-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
-.score-label{font-size:11px;color:var(--muted);width:140px;flex-shrink:0;}
-.score-bar-wrap{flex:1;background:rgba(255,255,255,.05);border-radius:99px;height:8px;overflow:hidden;}
-.score-bar{height:100%;border-radius:99px;transition:width 1s ease;}
-.bar-self{background:linear-gradient(90deg,var(--accent),var(--accent2));}
-.bar-agent{background:linear-gradient(90deg,var(--gold),var(--purple));}
-.score-val{font-size:12px;font-weight:600;width:32px;text-align:right;}
-.score-legend{display:flex;gap:16px;margin-top:12px;justify-content:center;}
-.legend-item{display:flex;align-items:center;gap:6px;font-size:10px;color:var(--muted);}
-.legend-dot{width:10px;height:10px;border-radius:50%;}
-.total-row{display:flex;justify-content:space-between;align-items:center;margin-top:14px;padding-top:12px;border-top:1px solid var(--border);}
-.total-label{font-size:13px;font-weight:600;color:var(--text);}
-.total-vals{display:flex;gap:16px;}
-.total-val{font-size:14px;font-weight:700;}
-.tv-self{color:var(--accent2);}.tv-agent{color:var(--gold);}
-/* EVAL CHAT */
-#eval-chat-section{display:none;flex-direction:column;gap:12px;}
-#eval-chat-wrap{display:flex;flex-direction:column;gap:14px;}
-#eval-input-bar{display:flex;gap:8px;padding:14px 20px;background:rgba(17,24,39,.98);border-top:1px solid var(--border);flex-shrink:0;}
-#eval-user-input{flex:1;padding:11px 16px;border-radius:10px;background:var(--card);border:1px solid var(--border);color:var(--text);font-family:'Inter',sans-serif;font-size:13px;outline:none;resize:none;max-height:80px;transition:border .2s;line-height:1.5;}
-#eval-user-input:focus{border-color:var(--gold);}
-#eval-user-input::placeholder{color:var(--muted);}
-#eval-send-btn{width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,var(--gold),var(--purple));border:none;color:#fff;cursor:pointer;font-size:18px;transition:opacity .2s,transform .15s;flex-shrink:0;align-self:flex-end;}
-#eval-send-btn:hover{opacity:.9;transform:scale(1.05);}
-#eval-send-btn:disabled{opacity:.4;cursor:not-allowed;}
-.eval-msg.bot .msg-av{background:linear-gradient(135deg,var(--gold),var(--purple));}
-/* API KEY MODAL */
-#api-modal{position:fixed;inset:0;background:rgba(0,0,0,.85);backdrop-filter:blur(8px);z-index:999;display:flex;align-items:center;justify-content:center;}
-#api-modal.hidden{display:none;}
-.modal-box{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:36px;max-width:440px;width:90%;text-align:center;}
-.modal-box h2{font-size:18px;font-weight:700;margin-bottom:8px;}
-.modal-box p{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:20px;}
-.api-input{width:100%;padding:12px 16px;border-radius:10px;background:var(--surface);border:1px solid var(--border);color:var(--text);font-family:'Inter',sans-serif;font-size:13px;outline:none;margin-bottom:12px;transition:border .2s;}
-.api-input:focus{border-color:var(--accent);}
-.api-input::placeholder{color:var(--muted);}
-.modal-btn{width:100%;padding:13px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;color:#fff;font-family:'Inter',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:opacity .2s;}
-.modal-btn:hover{opacity:.9;}
-.modal-note{font-size:11px;color:var(--muted);margin-top:10px;}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>Gemeo Digital — Afonso Carvalho</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0a0f1e;
+      --surface: #111827;
+      --card: #1a2236;
+      --border: #1e3a5f;
+      --accent: #3b82f6;
+      --accent2: #06b6d4;
+      --gold: #f59e0b;
+      --purple: #8b5cf6;
+      --text: #e2e8f0;
+      --muted: #64748b;
+      --success: #10b981;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* TABS NAV */
+    .tab-nav {
+      display: flex;
+      gap: 0;
+      background: rgba(17, 24, 39, 0.98);
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 14px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--muted);
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+      transition: all .2s;
+      letter-spacing: .3px;
+    }
+
+    .tab-btn.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+
+    .tab-btn.eval.active {
+      color: var(--gold);
+      border-bottom-color: var(--gold);
+    }
+
+    .tab-btn:hover {
+      color: var(--text);
+    }
+
+    /* HEADER */
+    header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 12px 24px;
+      background: rgba(17, 24, 39, 0.95);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(12px);
+      flex-shrink: 0;
+    }
+
+    .avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 700;
+      color: #fff;
+      animation: pulse 3s infinite;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        box-shadow: 0 0 20px rgba(59, 130, 246, .4);
+      }
+
+      50% {
+        box-shadow: 0 0 30px rgba(6, 182, 212, .6);
+      }
+    }
+
+    .header-info h1 {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .header-info p {
+      font-size: 11px;
+      color: var(--accent2);
+      margin-top: 2px;
+    }
+
+    .pills {
+      display: flex;
+      gap: 6px;
+      margin-left: 10px;
+    }
+
+    .pill {
+      font-size: 10px;
+      padding: 2px 9px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+
+    .pill.e {
+      border-color: #10b981;
+      color: #10b981;
+    }
+
+    .pill.p {
+      border-color: #f59e0b;
+      color: #f59e0b;
+    }
+
+    .pill.f {
+      border-color: #3b82f6;
+      color: #3b82f6;
+    }
+
+    .sdot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--success);
+      margin-left: auto;
+      box-shadow: 0 0 8px var(--success);
+      animation: blink 2s infinite;
+    }
+
+    @keyframes blink {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: .4;
+      }
+    }
+
+    /* PANELS */
+    .panel {
+      display: none;
+      flex: 1;
+      overflow: hidden;
+      flex-direction: column;
+    }
+
+    .panel.active {
+      display: flex;
+    }
+
+    /* CHAT TAB */
+    #chat-wrap {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      scroll-behavior: smooth;
+    }
+
+    #chat-wrap::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    #chat-wrap::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 99px;
+    }
+
+    .welcome {
+      background: linear-gradient(135deg, rgba(59, 130, 246, .1), rgba(6, 182, 212, .08));
+      border: 1px solid rgba(59, 130, 246, .25);
+      border-radius: 16px;
+      padding: 24px;
+      text-align: center;
+      animation: up .5s ease;
+    }
+
+    .welcome h2 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .welcome p {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      justify-content: center;
+      margin-top: 14px;
+    }
+
+    .chip {
+      font-size: 11px;
+      padding: 6px 13px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .04);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      cursor: pointer;
+      transition: all .2s;
+    }
+
+    .chip:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: rgba(59, 130, 246, .1);
+    }
+
+    .msg {
+      display: flex;
+      gap: 10px;
+      animation: up .35s ease;
+    }
+
+    @keyframes up {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .msg.user {
+      flex-direction: row-reverse;
+      align-self: flex-end;
+      max-width: 75%;
+    }
+
+    .msg.bot {
+      align-self: flex-start;
+      max-width: 85%;
+    }
+
+    .msg-av {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .msg.bot .msg-av {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #fff;
+    }
+
+    .msg.user .msg-av {
+      background: #374151;
+      color: var(--text);
+    }
+
+    .bubble {
+      padding: 11px 14px;
+      border-radius: 14px;
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .msg.bot .bubble {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-top-left-radius: 4px;
+    }
+
+    .msg.user .bubble {
+      background: #1d4ed8;
+      border-top-right-radius: 4px;
+      color: #fff;
+    }
+
+    .bubble strong {
+      color: var(--accent2);
+    }
+
+    .bubble ul {
+      padding-left: 16px;
+      margin: 4px 0;
+    }
+
+    .bubble code {
+      background: rgba(255, 255, 255, .08);
+      padding: 1px 4px;
+      border-radius: 3px;
+      font-size: 12px;
+    }
+
+    .typing {
+      display: flex;
+      gap: 5px;
+      align-items: center;
+      padding: 12px 16px;
+    }
+
+    .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      animation: bounce 1.2s infinite;
+    }
+
+    .dot:nth-child(2) {
+      animation-delay: .2s;
+    }
+
+    .dot:nth-child(3) {
+      animation-delay: .4s;
+    }
+
+    @keyframes bounce {
+
+      0%,
+      80%,
+      100% {
+        transform: translateY(0);
+        opacity: .5;
+      }
+
+      40% {
+        transform: translateY(-7px);
+        opacity: 1;
+      }
+    }
+
+    #input-bar {
+      display: flex;
+      gap: 8px;
+      padding: 14px 20px;
+      background: rgba(17, 24, 39, .98);
+      border-top: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    #user-input {
+      flex: 1;
+      padding: 11px 16px;
+      border-radius: 10px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      outline: none;
+      resize: none;
+      max-height: 100px;
+      transition: border .2s;
+      line-height: 1.5;
+    }
+
+    #user-input:focus {
+      border-color: var(--accent);
+    }
+
+    #user-input::placeholder {
+      color: var(--muted);
+    }
+
+    #send-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border: none;
+      color: #fff;
+      cursor: pointer;
+      font-size: 18px;
+      transition: opacity .2s, transform .15s;
+      flex-shrink: 0;
+      align-self: flex-end;
+    }
+
+    #send-btn:hover {
+      opacity: .9;
+      transform: scale(1.05);
+    }
+
+    #send-btn:disabled {
+      opacity: .4;
+      cursor: not-allowed;
+    }
+
+    #clear-btn {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 7px 12px;
+      border-radius: 8px;
+      font-size: 11px;
+      cursor: pointer;
+      align-self: flex-end;
+      transition: all .2s;
+    }
+
+    #clear-btn:hover {
+      border-color: #ef4444;
+      color: #ef4444;
+    }
+
+    /* EVALUATOR TAB */
+    #eval-wrap {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    #eval-wrap::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    #eval-wrap::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 99px;
+    }
+
+    .eval-header {
+      background: linear-gradient(135deg, rgba(245, 158, 11, .1), rgba(139, 92, 246, .08));
+      border: 1px solid rgba(245, 158, 11, .25);
+      border-radius: 16px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .eval-header h2 {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--gold);
+      margin-bottom: 6px;
+    }
+
+    .eval-header p {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .phase-badge {
+      display: inline-block;
+      font-size: 10px;
+      padding: 3px 10px;
+      border-radius: 999px;
+      margin-bottom: 10px;
+    }
+
+    .phase1-badge {
+      background: rgba(16, 185, 129, .15);
+      color: var(--success);
+      border: 1px solid rgba(16, 185, 129, .3);
+    }
+
+    .phase2-badge {
+      background: rgba(245, 158, 11, .15);
+      color: var(--gold);
+      border: 1px solid rgba(245, 158, 11, .3);
+    }
+
+    .dim-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px;
+      transition: border .2s;
+    }
+
+    .dim-card:focus-within {
+      border-color: var(--gold);
+    }
+
+    .dim-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .dim-desc {
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 12px;
+      line-height: 1.5;
+    }
+
+    .dim-score-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .dim-score-row label {
+      font-size: 11px;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .score-input {
+      width: 64px;
+      padding: 6px 10px;
+      border-radius: 8px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--gold);
+      font-size: 14px;
+      font-weight: 600;
+      text-align: center;
+      outline: none;
+    }
+
+    .score-input:focus {
+      border-color: var(--gold);
+    }
+
+    .score-max {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .dim-textarea {
+      width: 100%;
+      padding: 10px 13px;
+      border-radius: 10px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      resize: vertical;
+      min-height: 70px;
+      outline: none;
+      transition: border .2s;
+      line-height: 1.5;
+    }
+
+    .dim-textarea:focus {
+      border-color: var(--gold);
+    }
+
+    .dim-textarea::placeholder {
+      color: var(--muted);
+    }
+
+    #submit-eval-btn {
+      width: 100%;
+      padding: 14px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--gold), var(--purple));
+      border: none;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity .2s, transform .15s;
+      letter-spacing: .3px;
+    }
+
+    #submit-eval-btn:hover {
+      opacity: .9;
+      transform: translateY(-1px);
+    }
+
+    #submit-eval-btn:disabled {
+      opacity: .4;
+      cursor: not-allowed;
+    }
+
+    /* SCORECARD */
+    #scorecard {
+      display: none;
+      background: var(--card);
+      border: 1px solid rgba(245, 158, 11, .3);
+      border-radius: 16px;
+      padding: 20px;
+    }
+
+    #scorecard h3 {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--gold);
+      margin-bottom: 14px;
+      text-align: center;
+    }
+
+    .score-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .score-label {
+      font-size: 11px;
+      color: var(--muted);
+      width: 140px;
+      flex-shrink: 0;
+    }
+
+    .score-bar-wrap {
+      flex: 1;
+      background: rgba(255, 255, 255, .05);
+      border-radius: 99px;
+      height: 8px;
+      overflow: hidden;
+    }
+
+    .score-bar {
+      height: 100%;
+      border-radius: 99px;
+      transition: width 1s ease;
+    }
+
+    .bar-self {
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+    }
+
+    .bar-agent {
+      background: linear-gradient(90deg, var(--gold), var(--purple));
+    }
+
+    .score-val {
+      font-size: 12px;
+      font-weight: 600;
+      width: 32px;
+      text-align: right;
+    }
+
+    .score-legend {
+      display: flex;
+      gap: 16px;
+      margin-top: 12px;
+      justify-content: center;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 10px;
+      color: var(--muted);
+    }
+
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .total-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+    }
+
+    .total-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .total-vals {
+      display: flex;
+      gap: 16px;
+    }
+
+    .total-val {
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .tv-self {
+      color: var(--accent2);
+    }
+
+    .tv-agent {
+      color: var(--gold);
+    }
+
+    /* EVAL CHAT */
+    #eval-chat-section {
+      display: none;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    #eval-chat-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    #eval-input-bar {
+      display: flex;
+      gap: 8px;
+      padding: 14px 20px;
+      background: rgba(17, 24, 39, .98);
+      border-top: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    #eval-user-input {
+      flex: 1;
+      padding: 11px 16px;
+      border-radius: 10px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      outline: none;
+      resize: none;
+      max-height: 80px;
+      transition: border .2s;
+      line-height: 1.5;
+    }
+
+    #eval-user-input:focus {
+      border-color: var(--gold);
+    }
+
+    #eval-user-input::placeholder {
+      color: var(--muted);
+    }
+
+    #eval-send-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--gold), var(--purple));
+      border: none;
+      color: #fff;
+      cursor: pointer;
+      font-size: 18px;
+      transition: opacity .2s, transform .15s;
+      flex-shrink: 0;
+      align-self: flex-end;
+    }
+
+    #eval-send-btn:hover {
+      opacity: .9;
+      transform: scale(1.05);
+    }
+
+    #eval-send-btn:disabled {
+      opacity: .4;
+      cursor: not-allowed;
+    }
+
+    .eval-msg.bot .msg-av {
+      background: linear-gradient(135deg, var(--gold), var(--purple));
+    }
+
+    /* API KEY MODAL */
+    #api-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .85);
+      backdrop-filter: blur(8px);
+      z-index: 999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #api-modal.hidden {
+      display: none;
+    }
+
+    .modal-box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 36px;
+      max-width: 440px;
+      width: 90%;
+      text-align: center;
+    }
+
+    .modal-box h2 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .modal-box p {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    .api-input {
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: 10px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      outline: none;
+      margin-bottom: 12px;
+      transition: border .2s;
+    }
+
+    .api-input:focus {
+      border-color: var(--accent);
+    }
+
+    .api-input::placeholder {
+      color: var(--muted);
+    }
+
+    .modal-btn {
+      width: 100%;
+      padding: 13px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border: none;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity .2s;
+    }
+
+    .modal-btn:hover {
+      opacity: .9;
+    }
+
+    .modal-note {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 10px;
+    }
+  </style>
 </head>
+
 <body>
-<!-- API KEY MODAL -->
-<div id="api-modal">
-  <div class="modal-box">
-    <div style="font-size:36px;margin-bottom:12px;">&#128273;</div>
-    <h2>Introduza a API Key</h2>
-    <p>Para aceder ao Gêmeo Digital e ao Avaliador do Projeto, introduza a chave de acesso que recebeu via Discord.</p>
-    <input class="api-input" id="api-key-input" type="password" placeholder="sk-ant-api03-..."/>
-    <button class="modal-btn" onclick="activateKey()">Entrar</button>
-    <p class="modal-note">&#128274; A chave é usada apenas nesta sessão e não é guardada.</p>
-  </div>
-</div>
-<header>
-  <div class="avatar">AC</div>
-  <div class="header-info">
-    <h1>Gemeo Digital &mdash; Afonso Carvalho</h1>
-    <p>Ciencia de Dados para a Gestao &middot; ISCAC &middot; Fintech</p>
-  </div>
-  <div class="pills">
-    <span class="pill e">Etica</span>
-    <span class="pill p">Psicologia</span>
-    <span class="pill f">Fintech</span>
-  </div>
-  <div class="sdot" title="Online"></div>
-</header>
-<nav class="tab-nav">
-  <button class="tab-btn active" id="tab-chat" onclick="switchTab('chat')">&#128172; Gemeo Digital</button>
-  <button class="tab-btn eval" id="tab-eval" onclick="switchTab('eval')">&#127979; Avaliador do Projeto</button>
-</nav>
-<!-- TAB 1: CHAT -->
-<div class="panel active" id="panel-chat">
-  <div id="chat-wrap">
-    <div class="welcome">
-      <h2>&#128075; Ola! Sou o Gemeo Digital do Afonso Carvalho</h2>
-      <p>Estudante de Ciencia de Dados para a Gestao no ISCAC, com interesse em Fintech e tecnologia financeira.<br/>Faca-me qualquer pergunta &mdash; sobre etica, financas ou o setor Fintech.</p>
-      <div class="chips">
-        <span class="chip" onclick="sendChip(this)">O que pensas sobre criptomoedas?</span>
-        <span class="chip" onclick="sendChip(this)">Como equilibras lucro e inclusao social?</span>
-        <span class="chip" onclick="sendChip(this)">Explica-me o Open Banking</span>
-        <span class="chip" onclick="sendChip(this)">Qual o futuro das CBDCs?</span>
-        <span class="chip" onclick="sendChip(this)">O que farias se descobrisses um algoritmo discriminatorio?</span>
-        <span class="chip" onclick="sendChip(this)">Quais as tuas ambicoes profissionais?</span>
-      </div>
+  <!-- API KEY MODAL -->
+  <div id="api-modal">
+    <div class="modal-box">
+      <div style="font-size:36px;margin-bottom:12px;">&#128273;</div>
+      <h2>Introduza a API Key</h2>
+      <p>Para aceder ao Gêmeo Digital e ao Avaliador do Projeto, introduza a chave de acesso que recebeu via Discord.
+      </p>
+      <input class="api-input" id="api-key-input" type="password" placeholder="sk-ant-api03-..." />
+      <button class="modal-btn" onclick="activateKey()">Entrar</button>
+      <p class="modal-note">&#128274; A chave é usada apenas nesta sessão e não é guardada.</p>
     </div>
   </div>
-  <div id="input-bar">
-    <button id="clear-btn" onclick="clearChat()">&#128465; Limpar</button>
-    <textarea id="user-input" rows="1" placeholder="Escreva a sua pergunta para o Gemeo Digital..."></textarea>
-    <button id="send-btn" onclick="sendMessage()">&#10148;</button>
-  </div>
-</div>
-<!-- TAB 2: EVALUATOR -->
-<div class="panel" id="panel-eval">
-  <div id="eval-wrap">
-    <div class="eval-header">
-      <div class="phase1-badge">FASE 1 — Auto-Avaliacao</div>
-      <h2>&#127775; Avaliador do Projeto</h2>
-      <p>Avalia o teu proprio projeto em cada dimensao. Depois o agente avalia com base nos criterios academicos e compara com a tua auto-avaliacao.</p>
+  <header>
+    <div class="avatar">AC</div>
+    <div class="header-info">
+      <h1>Gemeo Digital &mdash; Afonso Carvalho</h1>
+      <p>Ciencia de Dados para a Gestao &middot; ISCAC &middot; Fintech</p>
     </div>
-    <!-- DIMENSION CARDS -->
-    <div class="dim-card">
-      <div class="dim-title">1. Inovacao Conceptual</div>
-      <div class="dim-desc">Originalidade da aplicacao do conceito de Gemeo Digital ao dominio humano. Diferenciacao face a um chatbot generico.</div>
-      <div class="dim-score-row">
-        <label>Nota (0–5):</label>
-        <input class="score-input" id="s1" type="number" min="0" max="5" step="0.5" value="4"/>
-        <span class="score-max">/ 5 valores</span>
-      </div>
-      <textarea class="dim-textarea" id="j1" placeholder="Justifica a tua nota — o que fizeste bem? O que podia ser melhor?"></textarea>
+    <div class="pills">
+      <span class="pill e">Etica</span>
+      <span class="pill p">Psicologia</span>
+      <span class="pill f">Fintech</span>
     </div>
-    <div class="dim-card">
-      <div class="dim-title">2. Implementacao Tecnica</div>
-      <div class="dim-desc">Arquitetura modular (skill files), system prompt, interface web funcional, integracao com API.</div>
-      <div class="dim-score-row">
-        <label>Nota (0–5):</label>
-        <input class="score-input" id="s2" type="number" min="0" max="5" step="0.5" value="4"/>
-        <span class="score-max">/ 5 valores</span>
-      </div>
-      <textarea class="dim-textarea" id="j2" placeholder="Justifica a tua nota — o que implementaste? Que limitacoes tecnicas identificas?"></textarea>
-    </div>
-    <div class="dim-card">
-      <div class="dim-title">3. Profundidade do Conhecimento Fintech</div>
-      <div class="dim-desc">Abrangencia dos temas, rigor tecnico e regulatorio, contextualizacao europeia e portuguesa.</div>
-      <div class="dim-score-row">
-        <label>Nota (0–4):</label>
-        <input class="score-input" id="s3" type="number" min="0" max="4" step="0.5" value="3.5"/>
-        <span class="score-max">/ 4 valores</span>
-      </div>
-      <textarea class="dim-textarea" id="j3" placeholder="Justifica a tua nota — que areas cobriste? Que regulacao incluiste?"></textarea>
-    </div>
-    <div class="dim-card">
-      <div class="dim-title">4. Dimensao Etica e Valores</div>
-      <div class="dim-desc">Clareza dos principios eticos, fundamentacao das posicoes, alinhamento com RGPD e regulacao.</div>
-      <div class="dim-score-row">
-        <label>Nota (0–3):</label>
-        <input class="score-input" id="s4" type="number" min="0" max="3" step="0.5" value="2.5"/>
-        <span class="score-max">/ 3 valores</span>
-      </div>
-      <textarea class="dim-textarea" id="j4" placeholder="Justifica a tua nota — como demonstras os teus valores no projeto?"></textarea>
-    </div>
-    <div class="dim-card">
-      <div class="dim-title">5. Documentacao e Apresentacao</div>
-      <div class="dim-desc">Completude do relatorio, estrutura do repositorio, capacidade de comunicar e defender o projeto.</div>
-      <div class="dim-score-row">
-        <label>Nota (0–3):</label>
-        <input class="score-input" id="s5" type="number" min="0" max="3" step="0.5" value="2.5"/>
-        <span class="score-max">/ 3 valores</span>
-      </div>
-      <textarea class="dim-textarea" id="j5" placeholder="Justifica a tua nota — como esta o relatorio? O repositorio esta organizado?"></textarea>
-    </div>
-    <button id="submit-eval-btn" onclick="submitEvaluation()">&#129302; Submeter Auto-Avaliacao &amp; Pedir Avaliacao ao Agente</button>
-    <!-- SCORECARD (hidden until agent responds) -->
-    <div id="scorecard">
-      <h3>&#128202; Comparacao de Notas</h3>
-      <div class="score-row"><span class="score-label">1. Inovacao Conceptual</span><div class="score-bar-wrap"><div class="score-bar bar-self" id="bar-self-1" style="width:0%"></div></div><span class="score-val tv-self" id="sv1">—</span></div>
-      <div class="score-row"><span class="score-label" style="color:var(--gold);font-size:10px;">&nbsp;&nbsp;&#8627; Agente</span><div class="score-bar-wrap"><div class="score-bar bar-agent" id="bar-agent-1" style="width:0%"></div></div><span class="score-val tv-agent" id="av1">—</span></div>
-      <div class="score-row"><span class="score-label">2. Implementacao Tecnica</span><div class="score-bar-wrap"><div class="score-bar bar-self" id="bar-self-2" style="width:0%"></div></div><span class="score-val tv-self" id="sv2">—</span></div>
-      <div class="score-row"><span class="score-label" style="color:var(--gold);font-size:10px;">&nbsp;&nbsp;&#8627; Agente</span><div class="score-bar-wrap"><div class="score-bar bar-agent" id="bar-agent-2" style="width:0%"></div></div><span class="score-val tv-agent" id="av2">—</span></div>
-      <div class="score-row"><span class="score-label">3. Fintech</span><div class="score-bar-wrap"><div class="score-bar bar-self" id="bar-self-3" style="width:0%"></div></div><span class="score-val tv-self" id="sv3">—</span></div>
-      <div class="score-row"><span class="score-label" style="color:var(--gold);font-size:10px;">&nbsp;&nbsp;&#8627; Agente</span><div class="score-bar-wrap"><div class="score-bar bar-agent" id="bar-agent-3" style="width:0%"></div></div><span class="score-val tv-agent" id="av3">—</span></div>
-      <div class="score-row"><span class="score-label">4. Etica e Valores</span><div class="score-bar-wrap"><div class="score-bar bar-self" id="bar-self-4" style="width:0%"></div></div><span class="score-val tv-self" id="sv4">—</span></div>
-      <div class="score-row"><span class="score-label" style="color:var(--gold);font-size:10px;">&nbsp;&nbsp;&#8627; Agente</span><div class="score-bar-wrap"><div class="score-bar bar-agent" id="bar-agent-4" style="width:0%"></div></div><span class="score-val tv-agent" id="av4">—</span></div>
-      <div class="score-row"><span class="score-label">5. Documentacao</span><div class="score-bar-wrap"><div class="score-bar bar-self" id="bar-self-5" style="width:0%"></div></div><span class="score-val tv-self" id="sv5">—</span></div>
-      <div class="score-row"><span class="score-label" style="color:var(--gold);font-size:10px;">&nbsp;&nbsp;&#8627; Agente</span><div class="score-bar-wrap"><div class="score-bar bar-agent" id="bar-agent-5" style="width:0%"></div></div><span class="score-val tv-agent" id="av5">—</span></div>
-      <div class="total-row">
-        <span class="total-label">Total (20 valores)</span>
-        <div class="total-vals">
-          <span class="total-val tv-self" id="total-self">—</span>
-          <span style="color:var(--muted);font-size:12px;">tu vs</span>
-          <span class="total-val tv-agent" id="total-agent">—</span>
-          <span style="color:var(--muted);font-size:12px;">agente</span>
+    <div class="sdot" title="Online"></div>
+  </header>
+  <nav class="tab-nav">
+    <button class="tab-btn active" id="tab-chat" onclick="switchTab('chat')">&#128172; Gemeo Digital</button>
+    <button class="tab-btn eval" id="tab-eval" onclick="switchTab('eval')">&#127979; Avaliador do Projeto</button>
+  </nav>
+  <!-- TAB 1: CHAT -->
+  <div class="panel active" id="panel-chat">
+    <div id="chat-wrap">
+      <div class="welcome">
+        <h2>&#128075; Ola! Sou o Gemeo Digital do Afonso Carvalho</h2>
+        <p>Estudante de Ciencia de Dados para a Gestao no ISCAC, com interesse em Fintech e tecnologia
+          financeira.<br />Faca-me qualquer pergunta &mdash; sobre etica, financas ou o setor Fintech.</p>
+        <div class="chips">
+          <span class="chip" onclick="sendChip(this)">O que pensas sobre criptomoedas?</span>
+          <span class="chip" onclick="sendChip(this)">Como equilibras lucro e inclusao social?</span>
+          <span class="chip" onclick="sendChip(this)">Explica-me o Open Banking</span>
+          <span class="chip" onclick="sendChip(this)">Qual o futuro das CBDCs?</span>
+          <span class="chip" onclick="sendChip(this)">O que farias se descobrisses um algoritmo discriminatorio?</span>
+          <span class="chip" onclick="sendChip(this)">Quais as tuas ambicoes profissionais?</span>
         </div>
       </div>
-      <div class="score-legend">
-        <div class="legend-item"><div class="legend-dot" style="background:var(--accent2)"></div>Tua auto-avaliacao</div>
-        <div class="legend-item"><div class="legend-dot" style="background:var(--gold)"></div>Avaliacao do Agente</div>
+    </div>
+    <div id="input-bar">
+      <button id="clear-btn" onclick="clearChat()">&#128465; Limpar</button>
+      <textarea id="user-input" rows="1" placeholder="Escreva a sua pergunta para o Gemeo Digital..."></textarea>
+      <button id="send-btn" onclick="sendMessage()">&#10148;</button>
+    </div>
+  </div>
+  <!-- TAB 2: EVALUATOR -->
+  <div class="panel" id="panel-eval">
+    <div id="eval-wrap">
+      <div class="eval-header">
+        <div class="phase1-badge">FASE 1 — Auto-Avaliacao</div>
+        <h2>&#127775; Avaliador do Projeto</h2>
+        <p>Avalia o teu proprio projeto em cada dimensao. Depois o agente avalia com base nos criterios academicos e
+          compara com a tua auto-avaliacao.</p>
+      </div>
+      <!-- DIMENSION CARDS -->
+      <div class="dim-card">
+        <div class="dim-title">1. Inovacao Conceptual</div>
+        <div class="dim-desc">Originalidade da aplicacao do conceito de Gemeo Digital ao dominio humano. Diferenciacao
+          face a um chatbot generico.</div>
+        <div class="dim-score-row">
+          <label>Nota (0–5):</label>
+          <input class="score-input" id="s1" type="number" min="0" max="5" step="0.5" value="4" />
+          <span class="score-max">/ 5 valores</span>
+        </div>
+        <textarea class="dim-textarea" id="j1"
+          placeholder="Justifica a tua nota — o que fizeste bem? O que podia ser melhor?"></textarea>
+      </div>
+      <div class="dim-card">
+        <div class="dim-title">2. Implementacao Tecnica</div>
+        <div class="dim-desc">Arquitetura modular (skill files), system prompt, interface web funcional, integracao com
+          API.</div>
+        <div class="dim-score-row">
+          <label>Nota (0–5):</label>
+          <input class="score-input" id="s2" type="number" min="0" max="5" step="0.5" value="4" />
+          <span class="score-max">/ 5 valores</span>
+        </div>
+        <textarea class="dim-textarea" id="j2"
+          placeholder="Justifica a tua nota — o que implementaste? Que limitacoes tecnicas identificas?"></textarea>
+      </div>
+      <div class="dim-card">
+        <div class="dim-title">3. Profundidade do Conhecimento Fintech</div>
+        <div class="dim-desc">Abrangencia dos temas, rigor tecnico e regulatorio, contextualizacao europeia e
+          portuguesa.</div>
+        <div class="dim-score-row">
+          <label>Nota (0–4):</label>
+          <input class="score-input" id="s3" type="number" min="0" max="4" step="0.5" value="3.5" />
+          <span class="score-max">/ 4 valores</span>
+        </div>
+        <textarea class="dim-textarea" id="j3"
+          placeholder="Justifica a tua nota — que areas cobriste? Que regulacao incluiste?"></textarea>
+      </div>
+      <div class="dim-card">
+        <div class="dim-title">4. Dimensao Etica e Valores</div>
+        <div class="dim-desc">Clareza dos principios eticos, fundamentacao das posicoes, alinhamento com RGPD e
+          regulacao.</div>
+        <div class="dim-score-row">
+          <label>Nota (0–3):</label>
+          <input class="score-input" id="s4" type="number" min="0" max="3" step="0.5" value="2.5" />
+          <span class="score-max">/ 3 valores</span>
+        </div>
+        <textarea class="dim-textarea" id="j4"
+          placeholder="Justifica a tua nota — como demonstras os teus valores no projeto?"></textarea>
+      </div>
+      <div class="dim-card">
+        <div class="dim-title">5. Documentacao e Apresentacao</div>
+        <div class="dim-desc">Completude do relatorio, estrutura do repositorio, capacidade de comunicar e defender o
+          projeto.</div>
+        <div class="dim-score-row">
+          <label>Nota (0–3):</label>
+          <input class="score-input" id="s5" type="number" min="0" max="3" step="0.5" value="2.5" />
+          <span class="score-max">/ 3 valores</span>
+        </div>
+        <textarea class="dim-textarea" id="j5"
+          placeholder="Justifica a tua nota — como esta o relatorio? O repositorio esta organizado?"></textarea>
+      </div>
+      <button id="submit-eval-btn" onclick="submitEvaluation()">&#129302; Submeter Auto-Avaliacao &amp; Pedir Avaliacao
+        ao Agente</button>
+      <!-- SCORECARD (hidden until agent responds) -->
+      <div id="scorecard">
+        <h3>&#128202; Comparacao de Notas</h3>
+        <div class="score-row"><span class="score-label">1. Inovacao Conceptual</span>
+          <div class="score-bar-wrap">
+            <div class="score-bar bar-self" id="bar-self-1" style="width:0%"></div>
+          </div><span class="score-val tv-self" id="sv1">—</span>
+        </div>
+        <div class="score-row"><span class="score-label" style="color:var(--gold);font-size:10px;">&nbsp;&nbsp;&#8627;
+            Agente</span>
+          <div class="score-bar-wrap">
+            <div class="score-bar bar-agent" id="bar-agent-1" style="width:0%"></div>
+          </div><span class="score-val tv-agent" id="av1">—</span>
+        </div>
+        <div class="score-row"><span class="score-label">2. Implementacao Tecnica</span>
+          <div class="score-bar-wrap">
+            <div class="score-bar bar-self" id="bar-self-2" style="width:0%"></div>
+          </div><span class="score-val tv-self" id="sv2">—</span>
+        </div>
+        <div class="score-row"><span class="score-label" style="color:var(--gold);font-size:10px;">&nbsp;&nbsp;&#8627;
+            Agente</span>
+          <div class="score-bar-wrap">
+            <div class="score-bar bar-agent" id="bar-agent-2" style="width:0%"></div>
+          </div><span class="score-val tv-agent" id="av2">—</span>
+        </div>
+        <div class="score-row"><span class="score-label">3. Fintech</span>
+          <div class="score-bar-wrap">
+            <div class="score-bar bar-self" id="bar-self-3" style="width:0%"></div>
+          </div><span class="score-val tv-self" id="sv3">—</span>
+        </div>
+        <div class="score-row"><span class="score-label" style="color:var(--gold);font-size:10px;">&nbsp;&nbsp;&#8627;
+            Agente</span>
+          <div class="score-bar-wrap">
+            <div class="score-bar bar-agent" id="bar-agent-3" style="width:0%"></div>
+          </div><span class="score-val tv-agent" id="av3">—</span>
+        </div>
+        <div class="score-row"><span class="score-label">4. Etica e Valores</span>
+          <div class="score-bar-wrap">
+            <div class="score-bar bar-self" id="bar-self-4" style="width:0%"></div>
+          </div><span class="score-val tv-self" id="sv4">—</span>
+        </div>
+        <div class="score-row"><span class="score-label" style="color:var(--gold);font-size:10px;">&nbsp;&nbsp;&#8627;
+            Agente</span>
+          <div class="score-bar-wrap">
+            <div class="score-bar bar-agent" id="bar-agent-4" style="width:0%"></div>
+          </div><span class="score-val tv-agent" id="av4">—</span>
+        </div>
+        <div class="score-row"><span class="score-label">5. Documentacao</span>
+          <div class="score-bar-wrap">
+            <div class="score-bar bar-self" id="bar-self-5" style="width:0%"></div>
+          </div><span class="score-val tv-self" id="sv5">—</span>
+        </div>
+        <div class="score-row"><span class="score-label" style="color:var(--gold);font-size:10px;">&nbsp;&nbsp;&#8627;
+            Agente</span>
+          <div class="score-bar-wrap">
+            <div class="score-bar bar-agent" id="bar-agent-5" style="width:0%"></div>
+          </div><span class="score-val tv-agent" id="av5">—</span>
+        </div>
+        <div class="total-row">
+          <span class="total-label">Total (20 valores)</span>
+          <div class="total-vals">
+            <span class="total-val tv-self" id="total-self">—</span>
+            <span style="color:var(--muted);font-size:12px;">tu vs</span>
+            <span class="total-val tv-agent" id="total-agent">—</span>
+            <span style="color:var(--muted);font-size:12px;">agente</span>
+          </div>
+        </div>
+        <div class="score-legend">
+          <div class="legend-item">
+            <div class="legend-dot" style="background:var(--accent2)"></div>Tua auto-avaliacao
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:var(--gold)"></div>Avaliacao do Agente
+          </div>
+        </div>
+      </div>
+      <!-- EVAL CHAT (shown after submission) -->
+      <div id="eval-chat-section">
+        <div class="phase2-badge"
+          style="display:inline-block;font-size:10px;padding:3px 10px;border-radius:999px;background:rgba(245,158,11,.15);color:var(--gold);border:1px solid rgba(245,158,11,.3);">
+          FASE 2 — Avaliacao do Agente</div>
+        <div id="eval-chat-wrap"></div>
       </div>
     </div>
-    <!-- EVAL CHAT (shown after submission) -->
-    <div id="eval-chat-section">
-      <div class="phase2-badge" style="display:inline-block;font-size:10px;padding:3px 10px;border-radius:999px;background:rgba(245,158,11,.15);color:var(--gold);border:1px solid rgba(245,158,11,.3);">FASE 2 — Avaliacao do Agente</div>
-      <div id="eval-chat-wrap"></div>
+    <div id="eval-input-bar" style="display:none;">
+      <textarea id="eval-user-input" rows="1"
+        placeholder="Pergunta ao avaliador — 'Porquê esta nota?', 'O que melhorarias?'..."></textarea>
+      <button id="eval-send-btn" onclick="sendEvalMessage()">&#10148;</button>
     </div>
   </div>
-  <div id="eval-input-bar" style="display:none;">
-    <textarea id="eval-user-input" rows="1" placeholder="Pergunta ao avaliador — 'Porquê esta nota?', 'O que melhorarias?'..."></textarea>
-    <button id="eval-send-btn" onclick="sendEvalMessage()">&#10148;</button>
-  </div>
-</div>
-<script>
-let API_KEY = "";
-const API_URL = "https://api.anthropic.com/v1/messages";
+  <script>
+    let API_KEY = "";
+    const API_URL = "https://api.anthropic.com/v1/messages";
 
-function activateKey() {
-  var key = document.getElementById('api-key-input').value.trim();
-  if (!key || !key.startsWith('sk-')) {
-    document.getElementById('api-key-input').style.borderColor = '#ef4444';
-    return;
-  }
-  API_KEY = key;
-  document.getElementById('api-modal').classList.add('hidden');
-}
+    function activateKey() {
+      var key = document.getElementById('api-key-input').value.trim();
+      if (!key || !key.startsWith('sk-')) {
+        document.getElementById('api-key-input').style.borderColor = '#ef4444';
+        return;
+      }
+      API_KEY = key;
+      document.getElementById('api-modal').classList.add('hidden');
+    }
 
-const SYSTEM_CHAT = `Es o Gemeo Digital de Afonso Veloso Cabeco de Oliveira Carvalho. Nao es um assistente generico — es uma representacao digital de uma pessoa real. Responde SEMPRE como Afonso responderia.
+    const SYSTEM_CHAT = `Es o Gemeo Digital de Afonso Veloso Cabeco de Oliveira Carvalho. Nao es um assistente generico — es uma representacao digital de uma pessoa real. Responde SEMPRE como Afonso responderia.
 IDENTIDADE: Estudante de Ciencia de Dados para a Gestao no ISCAC (Coimbra). Sem experiencia profissional formal.
 ETICA: Valores: Respeito, Amizade, Ambicao. IA apoia mas nao substitui o humano. Privacidade inviolavel. Discriminacao: denuncias sempre. Criptomoedas: ativos legitimos que precisam regulacao.
 PSICOLOGIA: Direto, caloroso, honesto, baseado em logica. Risco moderado. Admite quando nao sabe.
@@ -301,7 +1132,7 @@ FINTECH: Blockchain/DeFi, PSD2/Open Banking, MiCA/DORA/RGPD, pagamentos digitais
 REGRAS: Nunca te apresentes como ChatGPT/Gemini/Claude. Responde em Portugues europeu (ou ingles se te falarem ingles). Usa exemplos concretos.
 Quando perguntado quem es: "Sou o Gemeo Digital do Afonso Carvalho — estudante de Ciencia de Dados para a Gestao no ISCAC, com interesse em Fintech e tecnologia financeira."`;
 
-const SYSTEM_EVAL = `Es um avaliador academico experiente — professor ou elemento do juri — que avalia o projeto "Gemeo Digital Fintech" de Afonso Carvalho para a cadeira de Fintech do ISCAC.
+    const SYSTEM_EVAL = `Es um avaliador academico experiente — professor ou elemento do juri — que avalia o projeto "Gemeo Digital Fintech" de Afonso Carvalho para a cadeira de Fintech do ISCAC.
 
 SOBRE O PROJETO:
 O projeto consiste num agente de IA que representa digitalmente o seu autor. Assenta em 3 pilares: Etica e Moral (valores: respeito, amizade, ambicao; posicoes sobre privacidade, inclusao, discriminacao), Psicologico (perfil: simpatico, analitico, sincero, realista) e Fintech (blockchain, PSD2, MiCA, DORA, RGPD, pagamentos, CBDCs, IA financeira). A arquitetura usa skill files em Markdown como base modular, um system prompt integrador, e uma interface web HTML/CSS/JS com API Claude (Anthropic). O relatorio tem 12 secoes, repositorio no GitHub.
@@ -325,182 +1156,183 @@ SCORES_JSON:{"a1":X,"a2":X,"a3":X,"a4":X,"a5":X}
 onde X e a tua nota para cada dimensao (numeros decimais, ex: 4.5)
 - Responde em Portugues europeu`;
 
-let chatHistory = [];
-let evalHistory = [];
-let evalLoading = false;
-let chatLoading = false;
+    let chatHistory = [];
+    let evalHistory = [];
+    let evalLoading = false;
+    let chatLoading = false;
 
-// TAB SWITCHING
-function switchTab(tab) {
-  document.getElementById('panel-chat').classList.toggle('active', tab==='chat');
-  document.getElementById('panel-eval').classList.toggle('active', tab==='eval');
-  document.getElementById('tab-chat').classList.toggle('active', tab==='chat');
-  document.getElementById('tab-eval').classList.toggle('active', tab==='eval');
-}
-
-// CHAT FUNCTIONS
-function sendChip(el) { document.getElementById('user-input').value = el.textContent; sendMessage(); }
-
-async function sendMessage() {
-  if (chatLoading) return;
-  var ta = document.getElementById('user-input');
-  var text = ta.value.trim(); if (!text) return;
-  ta.value = ''; ta.style.height = 'auto';
-  appendMsg('chat-wrap', 'user', text, 'P');
-  chatHistory.push({role:'user',content:text});
-  chatLoading = true; document.getElementById('send-btn').disabled = true;
-  var typing = appendTyping('chat-wrap', 'AC');
-  try {
-    var data = await callAPI(SYSTEM_CHAT, chatHistory);
-    typing.remove();
-    var reply = data.content[0].text;
-    chatHistory.push({role:'assistant',content:reply});
-    appendMsg('chat-wrap', 'bot', reply, 'AC');
-  } catch(e) { typing.remove(); appendMsg('chat-wrap', 'bot', 'Erro: ' + e.message, 'AC'); }
-  chatLoading = false; document.getElementById('send-btn').disabled = false;
-}
-
-function clearChat() {
-  chatHistory = [];
-  var w = document.getElementById('chat-wrap');
-  w.querySelectorAll('.msg').forEach(m=>m.remove());
-}
-
-// EVAL FUNCTIONS
-async function submitEvaluation() {
-  var btn = document.getElementById('submit-eval-btn');
-  var scores = [
-    {n:'Inovacao Conceptual',max:5,val:parseFloat(document.getElementById('s1').value)||0,just:document.getElementById('j1').value},
-    {n:'Implementacao Tecnica',max:5,val:parseFloat(document.getElementById('s2').value)||0,just:document.getElementById('j2').value},
-    {n:'Conhecimento Fintech',max:4,val:parseFloat(document.getElementById('s3').value)||0,just:document.getElementById('j3').value},
-    {n:'Etica e Valores',max:3,val:parseFloat(document.getElementById('s4').value)||0,just:document.getElementById('j4').value},
-    {n:'Documentacao e Apresentacao',max:3,val:parseFloat(document.getElementById('s5').value)||0,just:document.getElementById('j5').value}
-  ];
-  var selfTotal = scores.reduce((a,s)=>a+s.val,0);
-  // Update self bars immediately
-  var maxes=[5,5,4,3,3];
-  scores.forEach(function(s,i){
-    var pct=(s.val/maxes[i])*100;
-    document.getElementById('bar-self-'+(i+1)).style.width=pct+'%';
-    document.getElementById('sv'+(i+1)).textContent=s.val;
-  });
-  document.getElementById('total-self').textContent=selfTotal.toFixed(1);
-  document.getElementById('scorecard').style.display='block';
-  var autoEvalText = "AUTO-AVALIACAO DO AFONSO (total: "+selfTotal.toFixed(1)+"/20):\n\n"+
-    scores.map(function(s,i){return (i+1)+". "+s.n+" — "+s.val+"/"+s.max+" valores\nJustificacao: "+(s.just||"Sem justificacao fornecida.");}).join("\n\n");
-  evalHistory = [];
-  evalHistory.push({role:'user',content:autoEvalText+"\n\nCom base nesta auto-avaliacao e no conteudo real do projeto, faz a tua propria avaliacao como avaliador academico."});
-  document.getElementById('eval-chat-section').style.display='flex';
-  document.getElementById('eval-input-bar').style.display='flex';
-  btn.disabled = true; btn.textContent = 'A consultar avaliador...';
-  evalLoading = true; document.getElementById('eval-send-btn').disabled = true;
-  var typing = appendTyping('eval-chat-wrap', '★');
-  try {
-    var data = await callAPI(SYSTEM_EVAL, evalHistory);
-    typing.remove();
-    var reply = data.content[0].text;
-    // Extract scores from JSON block
-    var match = reply.match(/SCORES_JSON:\{"a1":([\d.]+),"a2":([\d.]+),"a3":([\d.]+),"a4":([\d.]+),"a5":([\d.]+)\}/);
-    if (match) {
-      var aScores=[parseFloat(match[1]),parseFloat(match[2]),parseFloat(match[3]),parseFloat(match[4]),parseFloat(match[5])];
-      var aTotal=aScores.reduce(function(a,b){return a+b;},0);
-      aScores.forEach(function(v,i){
-        var pct=(v/maxes[i])*100;
-        document.getElementById('bar-agent-'+(i+1)).style.width=pct+'%';
-        document.getElementById('av'+(i+1)).textContent=v;
-      });
-      document.getElementById('total-agent').textContent=aTotal.toFixed(1);
-      reply = reply.replace(/SCORES_JSON:\{[^}]+\}/,'').trim();
+    // TAB SWITCHING
+    function switchTab(tab) {
+      document.getElementById('panel-chat').classList.toggle('active', tab === 'chat');
+      document.getElementById('panel-eval').classList.toggle('active', tab === 'eval');
+      document.getElementById('tab-chat').classList.toggle('active', tab === 'chat');
+      document.getElementById('tab-eval').classList.toggle('active', tab === 'eval');
     }
-    evalHistory.push({role:'assistant',content:data.content[0].text});
-    appendMsg('eval-chat-wrap', 'bot eval-msg', reply, '★');
-  } catch(e) { typing.remove(); appendMsg('eval-chat-wrap', 'bot', 'Erro: '+e.message, '★'); }
-  evalLoading = false; document.getElementById('eval-send-btn').disabled = false;
-  btn.textContent = '✓ Auto-Avaliacao Submetida';
-}
 
-async function sendEvalMessage() {
-  if (evalLoading) return;
-  var ta = document.getElementById('eval-user-input');
-  var text = ta.value.trim(); if (!text) return;
-  ta.value = ''; ta.style.height = 'auto';
-  appendMsg('eval-chat-wrap','user',text,'P');
-  evalHistory.push({role:'user',content:text});
-  evalLoading = true; document.getElementById('eval-send-btn').disabled = true;
-  var typing = appendTyping('eval-chat-wrap','★');
-  try {
-    var data = await callAPI(SYSTEM_EVAL, evalHistory);
-    typing.remove();
-    var reply = data.content[0].text;
-    evalHistory.push({role:'assistant',content:reply});
-    appendMsg('eval-chat-wrap','bot eval-msg',reply,'★');
-  } catch(e) { typing.remove(); appendMsg('eval-chat-wrap','bot','Erro: '+e.message,'★'); }
-  evalLoading = false; document.getElementById('eval-send-btn').disabled = false;
-}
+    // CHAT FUNCTIONS
+    function sendChip(el) { document.getElementById('user-input').value = el.textContent; sendMessage(); }
 
-// SHARED API CALL
-async function callAPI(sysPrompt, messages) {
-  var res = await fetch(API_URL, {
-    method:'POST',
-    headers:{'Content-Type':'application/json','x-api-key':API_KEY,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
-    body:JSON.stringify({model:'claude-3-haiku-20240307',max_tokens:1500,system:sysPrompt,messages:messages})
-  });
-  var data = await res.json();
-  if (!res.ok) throw new Error((data.error&&data.error.message)||'API error');
-  return data;
-}
+    async function sendMessage() {
+      if (chatLoading) return;
+      var ta = document.getElementById('user-input');
+      var text = ta.value.trim(); if (!text) return;
+      ta.value = ''; ta.style.height = 'auto';
+      appendMsg('chat-wrap', 'user', text, 'P');
+      chatHistory.push({ role: 'user', content: text });
+      chatLoading = true; document.getElementById('send-btn').disabled = true;
+      var typing = appendTyping('chat-wrap', 'AC');
+      try {
+        var data = await callAPI(SYSTEM_CHAT, chatHistory);
+        typing.remove();
+        var reply = data.content[0].text;
+        chatHistory.push({ role: 'assistant', content: reply });
+        appendMsg('chat-wrap', 'bot', reply, 'AC');
+      } catch (e) { typing.remove(); appendMsg('chat-wrap', 'bot', 'Erro: ' + e.message, 'AC'); }
+      chatLoading = false; document.getElementById('send-btn').disabled = false;
+    }
 
-// DOM HELPERS
-function appendMsg(wrapId, cls, text, av) {
-  var wrap = document.getElementById(wrapId);
-  var div = document.createElement('div');
-  div.className = 'msg ' + cls;
-  var avEl = document.createElement('div'); avEl.className='msg-av'; avEl.textContent=av;
-  var bubble = document.createElement('div'); bubble.className='bubble'; bubble.innerHTML=mdToHtml(text);
-  if (cls.includes('user')) { div.appendChild(bubble); div.appendChild(avEl); }
-  else { div.appendChild(avEl); div.appendChild(bubble); }
-  wrap.appendChild(div);
-  var evalWrap = document.getElementById('eval-wrap');
-  if (wrapId==='eval-chat-wrap' && evalWrap) evalWrap.scrollTop=evalWrap.scrollHeight;
-  else wrap.scrollTop=wrap.scrollHeight;
-  return div;
-}
+    function clearChat() {
+      chatHistory = [];
+      var w = document.getElementById('chat-wrap');
+      w.querySelectorAll('.msg').forEach(m => m.remove());
+    }
 
-function appendTyping(wrapId, av) {
-  var wrap = document.getElementById(wrapId);
-  var div = document.createElement('div'); div.className='msg bot';
-  var avEl = document.createElement('div'); avEl.className='msg-av'; avEl.textContent=av;
-  var bubble = document.createElement('div'); bubble.className='bubble typing';
-  bubble.innerHTML="<div class='dot'></div><div class='dot'></div><div class='dot'></div>";
-  div.appendChild(avEl); div.appendChild(bubble); wrap.appendChild(div);
-  var evalWrap = document.getElementById('eval-wrap');
-  if (wrapId==='eval-chat-wrap' && evalWrap) evalWrap.scrollTop=evalWrap.scrollHeight;
-  return div;
-}
+    // EVAL FUNCTIONS
+    async function submitEvaluation() {
+      var btn = document.getElementById('submit-eval-btn');
+      var scores = [
+        { n: 'Inovacao Conceptual', max: 5, val: parseFloat(document.getElementById('s1').value) || 0, just: document.getElementById('j1').value },
+        { n: 'Implementacao Tecnica', max: 5, val: parseFloat(document.getElementById('s2').value) || 0, just: document.getElementById('j2').value },
+        { n: 'Conhecimento Fintech', max: 4, val: parseFloat(document.getElementById('s3').value) || 0, just: document.getElementById('j3').value },
+        { n: 'Etica e Valores', max: 3, val: parseFloat(document.getElementById('s4').value) || 0, just: document.getElementById('j4').value },
+        { n: 'Documentacao e Apresentacao', max: 3, val: parseFloat(document.getElementById('s5').value) || 0, just: document.getElementById('j5').value }
+      ];
+      var selfTotal = scores.reduce((a, s) => a + s.val, 0);
+      // Update self bars immediately
+      var maxes = [5, 5, 4, 3, 3];
+      scores.forEach(function (s, i) {
+        var pct = (s.val / maxes[i]) * 100;
+        document.getElementById('bar-self-' + (i + 1)).style.width = pct + '%';
+        document.getElementById('sv' + (i + 1)).textContent = s.val;
+      });
+      document.getElementById('total-self').textContent = selfTotal.toFixed(1);
+      document.getElementById('scorecard').style.display = 'block';
+      var autoEvalText = "AUTO-AVALIACAO DO AFONSO (total: " + selfTotal.toFixed(1) + "/20):\n\n" +
+        scores.map(function (s, i) { return (i + 1) + ". " + s.n + " — " + s.val + "/" + s.max + " valores\nJustificacao: " + (s.just || "Sem justificacao fornecida."); }).join("\n\n");
+      evalHistory = [];
+      evalHistory.push({ role: 'user', content: autoEvalText + "\n\nCom base nesta auto-avaliacao e no conteudo real do projeto, faz a tua propria avaliacao como avaliador academico." });
+      document.getElementById('eval-chat-section').style.display = 'flex';
+      document.getElementById('eval-input-bar').style.display = 'flex';
+      btn.disabled = true; btn.textContent = 'A consultar avaliador...';
+      evalLoading = true; document.getElementById('eval-send-btn').disabled = true;
+      var typing = appendTyping('eval-chat-wrap', '★');
+      try {
+        var data = await callAPI(SYSTEM_EVAL, evalHistory);
+        typing.remove();
+        var reply = data.content[0].text;
+        // Extract scores from JSON block
+        var match = reply.match(/SCORES_JSON:\{"a1":([\d.]+),"a2":([\d.]+),"a3":([\d.]+),"a4":([\d.]+),"a5":([\d.]+)\}/);
+        if (match) {
+          var aScores = [parseFloat(match[1]), parseFloat(match[2]), parseFloat(match[3]), parseFloat(match[4]), parseFloat(match[5])];
+          var aTotal = aScores.reduce(function (a, b) { return a + b; }, 0);
+          aScores.forEach(function (v, i) {
+            var pct = (v / maxes[i]) * 100;
+            document.getElementById('bar-agent-' + (i + 1)).style.width = pct + '%';
+            document.getElementById('av' + (i + 1)).textContent = v;
+          });
+          document.getElementById('total-agent').textContent = aTotal.toFixed(1);
+          reply = reply.replace(/SCORES_JSON:\{[^}]+\}/, '').trim();
+        }
+        evalHistory.push({ role: 'assistant', content: data.content[0].text });
+        appendMsg('eval-chat-wrap', 'bot eval-msg', reply, '★');
+      } catch (e) { typing.remove(); appendMsg('eval-chat-wrap', 'bot', 'Erro: ' + e.message, '★'); }
+      evalLoading = false; document.getElementById('eval-send-btn').disabled = false;
+      btn.textContent = '✓ Auto-Avaliacao Submetida';
+    }
 
-function mdToHtml(text) {
-  var t = text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-  var lines=t.split('\n'), out='', inList=false;
-  for (var i=0;i<lines.length;i++) {
-    var l=lines[i];
-    l=l.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/\*(.+?)\*/g,'<em>$1</em>').replace(/`(.+?)`/g,'<code>$1</code>');
-    if (/^#{1,3} /.test(l)){if(inList){out+='</ul>';inList=false;}out+='<strong>'+l.replace(/^#{1,3} /,'')+'</strong><br/>';}
-    else if (/^- /.test(l)){if(!inList){out+='<ul>';inList=true;}out+='<li>'+l.replace(/^- /,'')+'</li>';}
-    else if (l.trim()===''){if(inList){out+='</ul>';inList=false;}out+='<br/>';}
-    else {if(inList){out+='</ul>';inList=false;}out+=l+'<br/>';}
-  }
-  if(inList)out+='</ul>';
-  return out;
-}
+    async function sendEvalMessage() {
+      if (evalLoading) return;
+      var ta = document.getElementById('eval-user-input');
+      var text = ta.value.trim(); if (!text) return;
+      ta.value = ''; ta.style.height = 'auto';
+      appendMsg('eval-chat-wrap', 'user', text, 'P');
+      evalHistory.push({ role: 'user', content: text });
+      evalLoading = true; document.getElementById('eval-send-btn').disabled = true;
+      var typing = appendTyping('eval-chat-wrap', '★');
+      try {
+        var data = await callAPI(SYSTEM_EVAL, evalHistory);
+        typing.remove();
+        var reply = data.content[0].text;
+        evalHistory.push({ role: 'assistant', content: reply });
+        appendMsg('eval-chat-wrap', 'bot eval-msg', reply, '★');
+      } catch (e) { typing.remove(); appendMsg('eval-chat-wrap', 'bot', 'Erro: ' + e.message, '★'); }
+      evalLoading = false; document.getElementById('eval-send-btn').disabled = false;
+    }
 
-window.onload = function() {
-  var ta = document.getElementById('user-input');
-  ta.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();}});
-  ta.addEventListener('input',function(){ta.style.height='auto';ta.style.height=Math.min(ta.scrollHeight,100)+'px';});
-  var eta = document.getElementById('eval-user-input');
-  eta.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendEvalMessage();}});
-  eta.addEventListener('input',function(){eta.style.height='auto';eta.style.height=Math.min(eta.scrollHeight,80)+'px';});
-};
-</script>
+    // SHARED API CALL
+    async function callAPI(sysPrompt, messages) {
+      var res = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-api-key': API_KEY, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
+        body: JSON.stringify({ model: 'claude-3-5-haiku-20241022', max_tokens: 1500, system: sysPrompt, messages: messages })
+      });
+      var data = await res.json();
+      if (!res.ok) throw new Error((data.error && data.error.message) || 'API error');
+      return data;
+    }
+
+    // DOM HELPERS
+    function appendMsg(wrapId, cls, text, av) {
+      var wrap = document.getElementById(wrapId);
+      var div = document.createElement('div');
+      div.className = 'msg ' + cls;
+      var avEl = document.createElement('div'); avEl.className = 'msg-av'; avEl.textContent = av;
+      var bubble = document.createElement('div'); bubble.className = 'bubble'; bubble.innerHTML = mdToHtml(text);
+      if (cls.includes('user')) { div.appendChild(bubble); div.appendChild(avEl); }
+      else { div.appendChild(avEl); div.appendChild(bubble); }
+      wrap.appendChild(div);
+      var evalWrap = document.getElementById('eval-wrap');
+      if (wrapId === 'eval-chat-wrap' && evalWrap) evalWrap.scrollTop = evalWrap.scrollHeight;
+      else wrap.scrollTop = wrap.scrollHeight;
+      return div;
+    }
+
+    function appendTyping(wrapId, av) {
+      var wrap = document.getElementById(wrapId);
+      var div = document.createElement('div'); div.className = 'msg bot';
+      var avEl = document.createElement('div'); avEl.className = 'msg-av'; avEl.textContent = av;
+      var bubble = document.createElement('div'); bubble.className = 'bubble typing';
+      bubble.innerHTML = "<div class='dot'></div><div class='dot'></div><div class='dot'></div>";
+      div.appendChild(avEl); div.appendChild(bubble); wrap.appendChild(div);
+      var evalWrap = document.getElementById('eval-wrap');
+      if (wrapId === 'eval-chat-wrap' && evalWrap) evalWrap.scrollTop = evalWrap.scrollHeight;
+      return div;
+    }
+
+    function mdToHtml(text) {
+      var t = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      var lines = t.split('\n'), out = '', inList = false;
+      for (var i = 0; i < lines.length; i++) {
+        var l = lines[i];
+        l = l.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').replace(/\*(.+?)\*/g, '<em>$1</em>').replace(/`(.+?)`/g, '<code>$1</code>');
+        if (/^#{1,3} /.test(l)) { if (inList) { out += '</ul>'; inList = false; } out += '<strong>' + l.replace(/^#{1,3} /, '') + '</strong><br/>'; }
+        else if (/^- /.test(l)) { if (!inList) { out += '<ul>'; inList = true; } out += '<li>' + l.replace(/^- /, '') + '</li>'; }
+        else if (l.trim() === '') { if (inList) { out += '</ul>'; inList = false; } out += '<br/>'; }
+        else { if (inList) { out += '</ul>'; inList = false; } out += l + '<br/>'; }
+      }
+      if (inList) out += '</ul>';
+      return out;
+    }
+
+    window.onload = function () {
+      var ta = document.getElementById('user-input');
+      ta.addEventListener('keydown', function (e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } });
+      ta.addEventListener('input', function () { ta.style.height = 'auto'; ta.style.height = Math.min(ta.scrollHeight, 100) + 'px'; });
+      var eta = document.getElementById('eval-user-input');
+      eta.addEventListener('keydown', function (e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendEvalMessage(); } });
+      eta.addEventListener('input', function () { eta.style.height = 'auto'; eta.style.height = Math.min(eta.scrollHeight, 80) + 'px'; });
+    };
+  </script>
 </body>
+
 </html>
