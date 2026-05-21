@@ -1208,7 +1208,6 @@ onde X e a tua nota para cada dimensao (numeros decimais, ex: 4.5)
         { n: 'Documentacao e Apresentacao', max: 3, val: parseFloat(document.getElementById('s5').value) || 0, just: document.getElementById('j5').value }
       ];
       var selfTotal = scores.reduce((a, s) => a + s.val, 0);
-      // Update self bars immediately
       var maxes = [5, 5, 4, 3, 3];
       scores.forEach(function (s, i) {
         var pct = (s.val / maxes[i]) * 100;
@@ -1230,7 +1229,6 @@ onde X e a tua nota para cada dimensao (numeros decimais, ex: 4.5)
         var data = await callAPI(SYSTEM_EVAL, evalHistory);
         typing.remove();
         var reply = data.content[0].text;
-        // Extract scores from JSON block
         var match = reply.match(/SCORES_JSON:\{"a1":([\d.]+),"a2":([\d.]+),"a3":([\d.]+),"a4":([\d.]+),"a5":([\d.]+)\}/);
         if (match) {
           var aScores = [parseFloat(match[1]), parseFloat(match[2]), parseFloat(match[3]), parseFloat(match[4]), parseFloat(match[5])];
@@ -1269,12 +1267,12 @@ onde X e a tua nota para cada dimensao (numeros decimais, ex: 4.5)
       evalLoading = false; document.getElementById('eval-send-btn').disabled = false;
     }
 
-    // SHARED API CALL
+    // ✅ CORRIGIDO: model atualizado para claude-haiku-4-5-20251001
     async function callAPI(sysPrompt, messages) {
       var res = await fetch(API_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'x-api-key': API_KEY, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
-        body: JSON.stringify({ model: 'claude-3-5-haiku-20241022', max_tokens: 1500, system: sysPrompt, messages: messages })
+        body: JSON.stringify({ model: 'claude-haiku-4-5-20251001', max_tokens: 1500, system: sysPrompt, messages: messages })
       });
       var data = await res.json();
       if (!res.ok) throw new Error((data.error && data.error.message) || 'API error');
